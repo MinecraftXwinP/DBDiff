@@ -6,6 +6,7 @@ use DBDiff\SQLGen\SQLGenerator;
 use DBDiff\Exceptions\BaseException;
 use DBDiff\Logger;
 use DBDiff\Templater;
+use DBDiff\Output\SummaryPrinter;
 
 
 class DBDiff {
@@ -26,6 +27,10 @@ class DBDiff {
             if (empty($diff['schema']) && empty($diff['data'])) {
                 Logger::info("Identical resources");
             } else {
+                if ($params->print) {
+                    $printer = new SummaryPrinter;
+                    $printer->output($diff['schema'], $diff['data']);
+                }
                 // SQL
                 $sqlGenerator = new SQLGenerator($diff);
                 $up =''; $down = '';
